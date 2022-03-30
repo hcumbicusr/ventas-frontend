@@ -23,10 +23,24 @@
             >{{errors.first('username')}}</div>
           </div>
           <div class="form-group">
+            <label for="lastname">Name</label>
+            <input
+              v-model="user.lastname"
+              v-validate="'max:150'"
+              type="text"
+              class="form-control"
+              name="lastname"
+            />
+            <div
+              v-if="submitted && errors.has('lastname')"
+              class="alert-danger"
+            >{{errors.first('lastname')}}</div>
+          </div>
+          <div class="form-group">
             <label for="email">Email</label>
             <input
               v-model="user.email"
-              v-validate="'required|email|max:50'"
+              v-validate="'email|max:50'"
               type="email"
               class="form-control"
               name="email"
@@ -72,7 +86,7 @@ export default {
   name: 'Register',
   data() {
     return {
-      user: new User('', '', ''),
+      user: new User('', '', '', '', '', ''),
       submitted: false,
       successful: false,
       message: ''
@@ -96,12 +110,12 @@ export default {
         if (isValid) {
           this.$store.dispatch('auth/register', this.user).then(
             data => {
-              this.message = data.message;
+              this.message = data.body;
               this.successful = true;
             },
             error => {
               this.message =
-                (error.response && error.response.data && error.response.data.message) ||
+                (error.response && error.response.data && error.response.data.body) ||
                 error.message ||
                 error.toString();
               this.successful = false;

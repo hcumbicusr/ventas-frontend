@@ -58,7 +58,7 @@ export default {
   name: 'Login',
   data() {
     return {
-      user: new User('', ''),
+      user: new User('admin', '123456', '', '', '', ''),
       loading: false,
       message: ''
     };
@@ -70,7 +70,7 @@ export default {
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push('/profile');
+      this.$router.push('/admin/user');
     }
   },
   methods: {
@@ -85,12 +85,12 @@ export default {
         if (this.user.username && this.user.password) {
           this.$store.dispatch('auth/login', this.user).then(
             () => {
-              this.$router.push('/profile');
+              this.$router.push('/admin');
             },
             error => {
               this.loading = false;
               this.message =
-                (error.response && error.response.data && error.response.data.message) ||
+                (error.response && error.response.data && error.response.data.body) ||
                 error.message ||
                 error.toString();
             }

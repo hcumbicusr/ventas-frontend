@@ -1,20 +1,20 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/auth/';
+const API_URL = process.env.API_BASE_URL||'http://localhost:3000/api/v1';
 
 class AuthService {
   login(user) {
     return axios
-      .post(API_URL + 'signin', {
+      .post(API_URL + '/auth/login', {
         username: user.username,
         password: user.password
       })
       .then(response => {
-        if (response.data.accessToken) {
-          localStorage.setItem('user', JSON.stringify(response.data));
+        if (response.data.body.accessToken) {
+          localStorage.setItem('user', JSON.stringify(response.data.body));
         }
 
-        return response.data;
+        return response.data.body;
       });
   }
 
@@ -23,10 +23,13 @@ class AuthService {
   }
 
   register(user) {
-    return axios.post(API_URL + 'signup', {
+    return axios.post(API_URL + '/user', {
       username: user.username,
+      password: user.password,
+      name: user.name,
+      lastname: user.lastname,
       email: user.email,
-      password: user.password
+      rol: 'Invitado'
     });
   }
 }
